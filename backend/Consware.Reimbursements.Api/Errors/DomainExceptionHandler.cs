@@ -1,3 +1,4 @@
+using Consware.Reimbursements.Api.DTOs;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Consware.Reimbursements.Api.Errors;
@@ -27,7 +28,7 @@ public sealed class DomainExceptionHandler(ILogger<DomainExceptionHandler> logge
         }
 
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(new { message }, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(new ErrorResponseDto(message), cancellationToken);
         return true;
     }
 }

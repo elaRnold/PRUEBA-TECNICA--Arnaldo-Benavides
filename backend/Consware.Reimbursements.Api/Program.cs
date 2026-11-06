@@ -1,8 +1,10 @@
 using Consware.Reimbursements.Api.Data;
+using Consware.Reimbursements.Api.DTOs;
 using Consware.Reimbursements.Api.Errors;
 using Consware.Reimbursements.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 const string AngularCorsPolicy = "AngularLocal";
 
@@ -14,7 +16,7 @@ builder.Services
     {
         // JSON mal formado o tipos inválidos: mismo formato de error que el resto de la API.
         options.InvalidModelStateResponseFactory = _ => new BadRequestObjectResult(
-            new { message = "El cuerpo de la solicitud no es válido. Revisa el formato JSON y los tipos de datos." });
+            new ErrorResponseDto("El cuerpo de la solicitud no es válido. Revisa el formato JSON y los tipos de datos."));
     });
 
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -35,7 +37,21 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Consware · API de reembolsos",
+        Version = "v1",
+        Description =
+            "Registro y aprobación de reembolsos de gastos. Montos hasta $500.000 COP se aprueban " +
+            "automáticamente; los mayores quedan pendientes. Rechazar exige motivo y los estados " +
+            "Approved/Rejected son finales. Errores: {\"message\": \"...\"} con 400, 404 o 409."
+    });
+
+    var xmlFile = Path.Combine(AppContext.BaseDirectory, $"{typeof(Program).Assembly.GetName().Name}.xml");
+    options.IncludeXmlComments(xmlFile);
+});
 
 var app = builder.Build();
 
@@ -51,3 +67,6 @@ app.UseCors(AngularCorsPolicy);
 app.MapControllers();
 
 app.Run();
+
+/// <summary>Punto de entrada; parcial para que los tests de integración usen WebApplicationFactory.</summary>
+public partial class Program;
