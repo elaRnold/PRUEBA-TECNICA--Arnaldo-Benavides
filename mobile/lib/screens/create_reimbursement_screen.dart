@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../config/api_config.dart';
 import '../models/expense_category.dart';
 import '../models/reimbursement.dart';
 import '../services/reimbursement_api_service.dart';
@@ -14,9 +13,12 @@ const int _autoApprovalHint = 500000;
 
 /// Formulario para registrar un gasto. Devuelve la solicitud creada al cerrar.
 class CreateReimbursementScreen extends StatefulWidget {
-  const CreateReimbursementScreen({super.key, required this.apiService});
+  const CreateReimbursementScreen({super.key, required this.apiService, required this.employeeName});
 
   final ReimbursementApiService apiService;
+
+  /// Empleado que registra el gasto.
+  final String employeeName;
 
   @override
   State<CreateReimbursementScreen> createState() => _CreateReimbursementScreenState();
@@ -58,7 +60,7 @@ class _CreateReimbursementScreenState extends State<CreateReimbursementScreen> {
 
     try {
       final created = await widget.apiService.createReimbursement(
-        employeeName: ApiConfig.employeeName,
+        employeeName: widget.employeeName,
         amount: parseCopDigits(_amountController.text)!,
         category: _category!.label,
         description: _descriptionController.text.trim(),

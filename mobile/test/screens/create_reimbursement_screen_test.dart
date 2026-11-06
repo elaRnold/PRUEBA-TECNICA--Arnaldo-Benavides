@@ -20,7 +20,9 @@ Future<List<Reimbursement?>> _openForm(WidgetTester tester, ReimbursementApiServ
         builder: (context) => TextButton(
           onPressed: () async => results.add(
             await Navigator.of(context).push<Reimbursement>(
-              MaterialPageRoute(builder: (_) => CreateReimbursementScreen(apiService: service)),
+              MaterialPageRoute(
+                builder: (_) => CreateReimbursementScreen(apiService: service, employeeName: 'Empleado Demo'),
+              ),
             ),
           ),
           child: const Text('abrir'),

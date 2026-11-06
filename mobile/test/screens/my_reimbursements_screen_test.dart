@@ -10,7 +10,7 @@ import '../helpers.dart';
 
 Widget _app(ReimbursementApiService service) => MaterialApp(
   theme: buildAppTheme(),
-  home: MyReimbursementsScreen(apiService: service),
+  home: MyReimbursementsScreen(apiService: service, employeeName: 'Empleado Demo'),
 );
 
 void main() {

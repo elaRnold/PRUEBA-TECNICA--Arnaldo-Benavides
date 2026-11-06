@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../config/api_config.dart';
 import '../models/expense_category.dart';
 import '../models/reimbursement.dart';
 import '../services/reimbursement_api_service.dart';
@@ -28,9 +27,20 @@ final class _Failed extends _ViewState {
 }
 
 class MyReimbursementsScreen extends StatefulWidget {
-  const MyReimbursementsScreen({super.key, required this.apiService});
+  const MyReimbursementsScreen({
+    super.key,
+    required this.apiService,
+    required this.employeeName,
+    this.onChangeEmployee,
+  });
 
   final ReimbursementApiService apiService;
+
+  /// Empleado elegido al iniciar; filtra la lista y firma las nuevas solicitudes.
+  final String employeeName;
+
+  /// Vuelve al selector de empleado. Si es null no se muestra la acción.
+  final VoidCallback? onChangeEmployee;
 
   @override
   State<MyReimbursementsScreen> createState() => _MyReimbursementsScreenState();
@@ -51,7 +61,7 @@ class _MyReimbursementsScreenState extends State<MyReimbursementsScreen> {
   Future<void> _load({bool showSpinner = true}) async {
     if (showSpinner) setState(() => _state = const _Loading());
     try {
-      final items = await widget.apiService.getMyReimbursements(ApiConfig.employeeName);
+      final items = await widget.apiService.getMyReimbursements(widget.employeeName);
       if (!mounted) return;
       setState(() => _state = _Loaded(items));
     } on ApiException catch (e) {
@@ -62,7 +72,10 @@ class _MyReimbursementsScreenState extends State<MyReimbursementsScreen> {
 
   Future<void> _openCreate() async {
     final created = await Navigator.of(context).push<Reimbursement>(
-      MaterialPageRoute(builder: (_) => CreateReimbursementScreen(apiService: widget.apiService)),
+      MaterialPageRoute(
+        builder: (_) =>
+            CreateReimbursementScreen(apiService: widget.apiService, employeeName: widget.employeeName),
+      ),
     );
     if (created == null || !mounted) return;
 
@@ -76,17 +89,23 @@ class _MyReimbursementsScreenState extends State<MyReimbursementsScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 72,
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Mis solicitudes'),
+            const Text('Mis solicitudes'),
             Text(
-              ApiConfig.employeeName,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFFC9CAE6)),
+              widget.employeeName,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Color(0xFFC9CAE6)),
             ),
           ],
         ),
         actions: [
+          if (widget.onChangeEmployee != null)
+            IconButton(
+              tooltip: 'Cambiar de empleado',
+              icon: const Icon(Icons.switch_account),
+              onPressed: widget.onChangeEmployee,
+            ),
           IconButton(
             tooltip: 'Actualizar',
             icon: const Icon(Icons.refresh),
@@ -229,9 +248,7 @@ class _ReimbursementTile extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.line),
-        boxShadow: const [
-          BoxShadow(color: Color(0x1403045E), offset: Offset(0, 2), blurRadius: 8),
-        ],
+        boxShadow: const [BoxShadow(color: Color(0x1403045E), offset: Offset(0, 2), blurRadius: 8)],
       ),
       padding: const EdgeInsets.all(16),
       child: Column(

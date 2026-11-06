@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'screens/my_reimbursements_screen.dart';
+import 'screens/select_employee_screen.dart';
 import 'services/reimbursement_api_service.dart';
 import 'theme/app_theme.dart';
 
@@ -22,7 +22,7 @@ class ReimbursementsApp extends StatelessWidget {
       title: 'Reembolsos Consware',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      home: MyReimbursementsScreen(apiService: apiService),
+      home: SelectEmployeeScreen(apiService: apiService),
     );
   }
 }

@@ -11,6 +11,6 @@ class ApiConfig {
 
   static const Duration timeout = Duration(seconds: 10);
 
-  /// Identificación simplificada del empleado (el enunciado no exige login).
-  static const String employeeName = 'Empleado Demo';
+  /// Identificación simplificada: el empleado se elige al iniciar (el enunciado no exige login).
+  static const List<String> employees = ['Empleado Demo', 'Ana Gómez', 'Carlos Pérez', 'Laura Martínez'];
 }
