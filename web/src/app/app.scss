@@ -1,0 +1,18 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: var(--brand);
+  color: #fff;
+}
+
+.topbar__brand {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.topbar__role {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
