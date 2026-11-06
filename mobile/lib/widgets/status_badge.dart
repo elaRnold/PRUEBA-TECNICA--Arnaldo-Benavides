@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/reimbursement.dart';
+import '../theme/app_theme.dart';
 
 class StatusBadge extends StatelessWidget {
   const StatusBadge({super.key, required this.status});
@@ -10,13 +11,14 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final (background, foreground, icon) = switch (status) {
-      ReimbursementStatus.pending => (const Color(0xFFFFF4D6), const Color(0xFF8A5A00), Icons.schedule),
-      ReimbursementStatus.approved => (const Color(0xFFE3F5EA), const Color(0xFF1B6B3A), Icons.check_circle),
-      ReimbursementStatus.rejected => (const Color(0xFFFCE4E4), const Color(0xFFA12626), Icons.cancel),
+      ReimbursementStatus.pending => (AppColors.pendingBg, AppColors.pendingFg, Icons.schedule),
+      ReimbursementStatus.approved => (AppColors.approvedBg, AppColors.approvedFg, Icons.check_circle),
+      ReimbursementStatus.rejected => (AppColors.rejectedBg, AppColors.rejectedFg, Icons.cancel),
     };
 
     return Semantics(
       label: 'Estado: ${status.label}',
+      excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
         decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(999)),

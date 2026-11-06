@@ -3,6 +3,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'screens/my_reimbursements_screen.dart';
 import 'services/reimbursement_api_service.dart';
+import 'theme/app_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,10 +21,7 @@ class ReimbursementsApp extends StatelessWidget {
     return MaterialApp(
       title: 'Reembolsos Consware',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0F5C8C)),
-        useMaterial3: true,
-      ),
+      theme: buildAppTheme(),
       home: MyReimbursementsScreen(apiService: apiService),
     );
   }

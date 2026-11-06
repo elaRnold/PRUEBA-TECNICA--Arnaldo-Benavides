@@ -22,8 +22,8 @@ class ApiException implements Exception {
 
 class ReimbursementApiService {
   ReimbursementApiService({http.Client? client, String? baseUrl})
-      : _client = client ?? http.Client(),
-        _baseUri = Uri.parse('${baseUrl ?? ApiConfig.baseUrl}${ApiConfig.reimbursementsPath}');
+    : _client = client ?? http.Client(),
+      _baseUri = Uri.parse('${baseUrl ?? ApiConfig.baseUrl}${ApiConfig.reimbursementsPath}');
 
   final http.Client _client;
   final Uri _baseUri;
