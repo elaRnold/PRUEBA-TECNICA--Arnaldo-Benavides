@@ -2,10 +2,10 @@
   <header class="panel__header">
     <div>
       <h1>Solicitudes de reembolso</h1>
-      <p class="panel__subtitle">Revisa y decide las solicitudes mayores a $500.000.</p>
+      <p class="panel__subtitle">Decide las solicitudes que superan $500.000. Las demás se aprueban solas.</p>
     </div>
     <button type="button" class="btn btn--ghost" (click)="load()" [disabled]="loading()">
-      Actualizar
+      {{ loading() ? 'Actualizando…' : 'Actualizar' }}
     </button>
   </header>
 
@@ -26,23 +26,29 @@
   @if (notice(); as n) {
     <div class="notice" [class.notice--error]="n.kind === 'error'" role="status">
       <span>{{ n.text }}</span>
-      <button type="button" class="notice__close" aria-label="Cerrar aviso" (click)="notice.set(null)">×</button>
+      <button type="button" class="notice__close" aria-label="Cerrar aviso" (click)="notice.set(null)">
+        <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+          <path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+      </button>
     </div>
   }
 
   @if (loadError()) {
     <div class="state state--error" role="alert">
-      <p>{{ loadError() }}</p>
+      <p class="state__title">{{ loadError() }}</p>
       <button type="button" class="btn btn--primary" (click)="load()">Reintentar</button>
     </div>
   } @else if (loading() && items().length === 0) {
-    <div class="state" aria-live="polite">Cargando solicitudes…</div>
+    <div class="state" aria-live="polite"><p>Cargando solicitudes…</p></div>
   } @else if (items().length === 0) {
     <div class="state">
       @if (filter() === 'Pending') {
-        No hay solicitudes pendientes por decidir.
+        <p class="state__title">Todo al día</p>
+        <p>No hay solicitudes pendientes por decidir.</p>
       } @else {
-        No hay solicitudes para este filtro.
+        <p class="state__title">Sin resultados</p>
+        <p>No hay solicitudes para este filtro.</p>
       }
     </div>
   } @else {
@@ -63,18 +69,20 @@
         <tbody>
           @for (item of items(); track item.id) {
             <tr>
-              <td class="muted">{{ item.id }}</td>
-              <td>{{ item.employeeName }}</td>
-              <td>{{ item.category }}</td>
-              <td class="desc" [title]="item.description">
+              <td class="muted" data-label="#">{{ item.id }}</td>
+              <td class="employee" data-label="Empleado">{{ item.employeeName }}</td>
+              <td data-label="Categoría">{{ item.category }}</td>
+              <td class="desc" data-label="Descripción">
                 {{ item.description }}
                 @if (item.rejectionReason) {
                   <span class="reason">Motivo: {{ item.rejectionReason }}</span>
                 }
               </td>
-              <td class="num">{{ item.amount | currency: 'COP' : 'symbol-narrow' : '1.0-2' }}</td>
-              <td class="muted">{{ item.createdAtUtc | date: 'd MMM y, h:mm a' }}</td>
-              <td>
+              <td class="num amount" data-label="Monto">
+                {{ item.amount | currency: 'COP' : 'symbol-narrow' : '1.0-2' }}
+              </td>
+              <td class="muted" data-label="Fecha">{{ item.createdAtUtc | date: 'd MMM y, h:mm a' }}</td>
+              <td data-label="Estado">
                 <span class="badge" [class]="'badge badge--' + item.status.toLowerCase()">
                   {{ statusLabels[item.status] }}
                 </span>
@@ -110,13 +118,13 @@
   }
 </section>
 
-<dialog #approveDialog class="dialog" (close)="toApprove.set(null)">
+<dialog #approveDialog class="dialog" aria-labelledby="approve-title" (close)="toApprove.set(null)">
   @if (toApprove(); as item) {
-    <h2>¿Aprobar solicitud #{{ item.id }}?</h2>
-    <p>
-      {{ item.employeeName }} · {{ item.category }} ·
+    <h2 id="approve-title">¿Aprobar la solicitud #{{ item.id }}?</h2>
+    <div class="dialog__summary">
+      <span>{{ item.employeeName }} · {{ item.category }}</span>
       <strong>{{ item.amount | currency: 'COP' : 'symbol-narrow' : '1.0-2' }}</strong>
-    </p>
+    </div>
     <p class="muted">{{ item.description }}</p>
     <div class="dialog__actions">
       <button type="button" class="btn btn--ghost" (click)="closeApprove()">Cancelar</button>
@@ -125,16 +133,16 @@
   }
 </dialog>
 
-<dialog #rejectDialog class="dialog" (close)="toReject.set(null)">
+<dialog #rejectDialog class="dialog" aria-labelledby="reject-title" (close)="toReject.set(null)">
   @if (toReject(); as item) {
     <form (submit)="submitReject($event)" novalidate>
-      <h2>Rechazar solicitud #{{ item.id }}</h2>
-      <p>
-        {{ item.employeeName }} · {{ item.category }} ·
+      <h2 id="reject-title">Rechazar la solicitud #{{ item.id }}</h2>
+      <div class="dialog__summary">
+        <span>{{ item.employeeName }} · {{ item.category }}</span>
         <strong>{{ item.amount | currency: 'COP' : 'symbol-narrow' : '1.0-2' }}</strong>
-      </p>
+      </div>
       <label class="field">
-        <span class="field__label">Motivo del rechazo (obligatorio)</span>
+        <span class="field__label">Motivo del rechazo</span>
         <textarea
           rows="4"
           placeholder="Ej.: El gasto no cumple la política de viáticos."
@@ -149,7 +157,7 @@
       }
       <div class="dialog__actions">
         <button type="button" class="btn btn--ghost" (click)="closeReject()">Cancelar</button>
-        <button type="submit" class="btn btn--reject">Rechazar</button>
+        <button type="submit" class="btn btn--danger">Rechazar solicitud</button>
       </div>
     </form>
   }

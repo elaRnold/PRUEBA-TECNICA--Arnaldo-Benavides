@@ -1,18 +1,33 @@
+// Paleta de Consware (consware.com.co) + colores semánticos de estado.
 :root {
-  --brand: #0f5c8c;
-  --ink: #1e293b;
-  --muted: #64748b;
-  --line: #e2e8f0;
+  --navy: #03045e;
+  --navy-700: #1a1b73;
+  --navy-tint: #ededf7;
+  --cyan: #00befb;
+  --ink: #343638;
+  --muted: #6b7079; // #848991 oscurecido para 4.5:1 sobre blanco
+  --line: #dcdee6;
   --surface: #ffffff;
-  --surface-alt: #f8fafc;
-  --page: #f1f5f9;
+  --surface-alt: #fafafc;
+  --page: #eef0f5;
 
-  --ok-bg: #e3f5ea;
-  --ok-fg: #1b6b3a;
-  --warn-bg: #fff4d6;
-  --warn-fg: #8a5a00;
-  --bad-bg: #fce4e4;
-  --bad-fg: #a12626;
+  --ok-bg: #e2f4e8;
+  --ok-fg: #17633a;
+  --warn-bg: #fff3d6;
+  --warn-fg: #7a4d00;
+  --bad-bg: #fce6e6;
+  --bad-fg: #9f2424;
+
+  --radius: 12px;
+  --shadow: 0 1px 2px rgb(3 4 94 / 6%), 0 4px 16px rgb(3 4 94 / 6%);
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html,
@@ -20,6 +35,44 @@ body {
   margin: 0;
   background: var(--page);
   color: var(--ink);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.45;
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgb(0 190 251 / 30%);
+  color: var(--navy);
+}
+
+:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9cad6 transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9cad6;
+  border-radius: 999px;
+  border: 2px solid var(--page);
+}
+
+button,
+textarea,
+input {
+  font-family: inherit;
+}
+
+textarea {
+  caret-color: var(--navy);
 }

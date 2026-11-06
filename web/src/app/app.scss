@@ -1,18 +1,45 @@
 .topbar {
+  background: var(--navy);
+  color: #fff;
+}
+
+.topbar__inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 14px 24px;
-  background: var(--brand);
-  color: #fff;
+  gap: 14px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
 }
 
 .topbar__brand {
   font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+
+.topbar__dot {
+  color: var(--cyan);
+}
+
+.topbar__divider {
+  width: 1px;
+  height: 20px;
+  background: rgb(255 255 255 / 25%);
+}
+
+.topbar__product {
+  font-weight: 500;
 }
 
 .topbar__role {
-  font-size: 0.9rem;
-  opacity: 0.85;
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: #c9cae6;
+}
+
+@media (max-width: 560px) {
+  .topbar__role {
+    display: none;
+  }
 }
